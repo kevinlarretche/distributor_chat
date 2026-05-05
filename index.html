@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>AUDIO HOUSE — Store Advisor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #fafafa;
+    --bg-surface: #f5f5f5;
+    --bg-elevated: #ebebeb;
+    --text-primary: #000000;
+    --text-secondary: #555555;
+    --text-muted: #999999;
+    --border: rgba(0,0,0,0.08);
+    --border-hover: rgba(0,0,0,0.20);
+    --border-strong: rgba(0,0,0,0.40);
+    --accent: #000000;
+    --accent-dim: rgba(0,0,0,0.04);
+    --bubble-user: #f0f0f0;
+    --bubble-bot: #ffffff;
+    --success: #00b300;
+    --app-height: 100vh;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; overflow-x: hidden; overscroll-behavior: none; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+  }
+  .header {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+    box-sizing: content-box;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .brand-mark { display: flex; flex-direction: column; gap: 4px; }
+  .brand-name {
+    font-size: 18px; font-weight: 800; letter-spacing: 0.22em;
+    color: var(--text-primary); line-height: 1;
+  }
+  .brand-sub {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 7px; line-height: 1; margin-top: 5px;
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+  .header-actions { display: flex; align-items: center; gap: 4px; }
+  .icon-btn {
+    background: none; border: none; color: var(--text-secondary); cursor: pointer;
+    width: 38px; height: 38px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .icon-btn:hover { color: var(--text-primary); background: var(--accent-dim); }
+  .chat-window {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-elevated) transparent;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    background: var(--bg-secondary);
+  }
+  .chat-window::-webkit-scrollbar { width: 4px; }
+  .chat-window::-webkit-scrollbar-track { background: transparent; }
+  .chat-window::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 2px; }
+  .message-wrapper {
+    display: flex;
+    flex-direction: column;
+    animation: fadeUp 0.35s ease forwards;
+    width: 100%;
+    max-width: 100%;
+  }
+  .message-wrapper.user { align-items: flex-end; }
+  .message-wrapper.bot { align-items: flex-start; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .bot-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bot-label::before { content: ''; display: block; width: 16px; height: 1px; background: var(--text-muted); }
+  .message {
+    padding: 16px 20px;
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 78%;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .message.user {
+    background: var(--text-primary); color: #ffffff; font-weight: 400;
+    border-radius: 4px 4px 0 4px;
+  }
+  .message.bot {
+    background: var(--bubble-bot); border: 1px solid var(--border);
+    border-radius: 0 4px 4px 4px; color: var(--text-primary); font-weight: 400;
+  }
+  .message.bot strong { font-weight: 700; color: var(--text-primary); }
+  .message.bot em { font-style: italic; color: var(--text-secondary); }
+  .message.bot ul { padding-left: 18px; margin: 8px 0; }
+  .message.bot ol { padding-left: 18px; margin: 8px 0; }
+  .message.bot li { margin: 4px 0; color: var(--text-secondary); }
+  .message.bot a { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; word-break: break-all; font-weight: 500; }
+  .message.bot code { background: var(--bg-surface); padding: 2px 6px; border-radius: 3px; font-size: 12px; font-family: 'SF Mono', Menlo, monospace; color: var(--text-primary); }
+  .message.bot p { margin-bottom: 8px; }
+  .message.bot p:last-child { margin-bottom: 0; }
+  .message.bot h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 6px 0; color: var(--text-primary); }
+  .message-time { font-size: 10px; font-weight: 600; letter-spacing: 0.10em; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; }
+  #typing .message.bot { display: flex; gap: 6px; padding: 18px 20px; align-items: center; }
+  .dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: pulse 1.4s infinite ease-in-out; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+  .footer-container {
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    padding: 20px 32px 28px;
+    flex-shrink: 0;
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+    padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+  }
+  .quick-replies { display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .quick-replies::-webkit-scrollbar { display: none; }
+  .qr-btn {
+    background: transparent; border: 1.5px solid var(--text-primary); color: var(--text-primary);
+    padding: 9px 18px; border-radius: 0; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; white-space: nowrap;
+    font-family: 'Inter', sans-serif; transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .qr-btn:hover { background: var(--text-primary); color: #ffffff; }
+  .input-wrapper {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-primary); border: 1.5px solid var(--border-strong);
+    border-radius: 4px; padding: 4px 4px 4px 20px; transition: border-color 0.2s ease;
+  }
+  .input-wrapper:focus-within { border-color: var(--text-primary); }
+  .input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.01em;
+    padding: 12px 0;
+    min-width: 0;
+    width: 100%;
+  }
+  .input-wrapper input::placeholder { color: var(--text-muted); }
+  .send-btn-wrapper { position: relative; width: 44px; height: 44px; flex-shrink: 0; }
+  .send-btn {
+    background: var(--text-primary); border: none; width: 44px; height: 44px; border-radius: 4px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.2s ease; flex-shrink: 0; position: relative; z-index: 2;
+  }
+  .send-btn:hover { opacity: 0.85; }
+  .wave-ring {
+    position: absolute; top: 50%; left: 50%; width: 44px; height: 44px;
+    border: 1px solid rgba(0,0,0,0); border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1); pointer-events: none; z-index: 1;
+  }
+  .send-btn-wrapper.rippling .wave-ring { animation: waveExpand 0.7s ease-out forwards; }
+  .send-btn-wrapper.rippling .wave-ring:nth-child(2) { animation-delay: 0.1s; }
+  .send-btn-wrapper.rippling .wave-ring:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes waveExpand {
+    0% { transform: translate(-50%, -50%) scale(1); border-color: rgba(0,0,0,0.4); }
+    100% { transform: translate(-50%, -50%) scale(2.8); border-color: rgba(0,0,0,0); }
+  }
+  .powered-by { text-align: center; font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: var(--text-muted); margin-top: 16px; }
+  .powered-by a { color: var(--text-secondary); text-decoration: none; transition: color 0.25s ease; position: relative; }
+  .powered-by a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--text-primary); transition: width 0.3s ease; }
+  .powered-by a:hover { color: var(--text-primary); }
+  .powered-by a:hover::after { width: 100%; }
+  .lang-wrapper { position: relative; z-index: 100; }
+  .lang-dropdown {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: var(--bg-primary); border: 1px solid var(--border-strong);
+    border-radius: 4px; overflow: hidden; min-width: 160px;
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: all 0.2s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .lang-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+  .lang-option {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 12px 16px; background: none; border: none;
+    color: var(--text-secondary); font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    cursor: pointer; transition: all 0.15s ease; text-align: left;
+  }
+  .lang-option:hover { background: var(--bg-surface); color: var(--text-primary); }
+  .lang-option.active { color: var(--text-primary); }
+  .lang-option .lang-flag { font-size: 13px; line-height: 1; font-weight: 700; }
+  .lang-option .lang-check { margin-left: auto; opacity: 0; font-size: 11px; color: var(--text-primary); }
+  .lang-option.active .lang-check { opacity: 1; }
+  @media (max-width: 640px) {
+    .header {
+      padding: 0 20px;
+      padding-left: max(20px, env(safe-area-inset-left));
+      padding-right: max(20px, env(safe-area-inset-right));
+      height: 60px;
+    }
+    .chat-window { padding: 24px 20px; gap: 20px; }
+    .footer-container {
+      padding: 14px 20px 18px;
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+      padding-left: max(20px, env(safe-area-inset-left));
+      padding-right: max(20px, env(safe-area-inset-right));
+    }
+    .message { max-width: 88%; padding: 14px 16px; font-size: 14px; }
+    .input-wrapper { padding: 4px 4px 4px 16px; }
+    .qr-btn { padding: 9px 14px; }
+    .powered-by { margin-top: 12px; }
+    .brand-name { font-size: 15px; letter-spacing: 0.20em; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="brand-mark">
+      <div class="brand-name">AUDIO HOUSE</div>
+      <div class="brand-sub">
+        <span class="status-dot"></span>
+        Store Advisor
+      </div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="lang-wrapper">
+      <button class="icon-btn" id="lang-btn" title="Language">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </button>
+      <div class="lang-dropdown" id="lang-dropdown">
+        <button class="lang-option active" data-lang="en"
+          data-welcome="Welcome to AUDIO HOUSE. I can help you find the right speaker, headphones, or soundbar across any of the brands we carry. What are you looking for today?"
+          data-placeholder="Ask about any product in the store...">
+          <span class="lang-flag">EN</span> English
+          <span class="lang-check">&#10003;</span>
+        </button>
+        <button class="lang-option" data-lang="fr"
+          data-welcome="Bienvenue chez AUDIO HOUSE. Je peux vous aider à trouver l'enceinte, les écouteurs ou la barre de son qui vous conviendra, parmi toutes nos marques. Que recherchez-vous ?"
+          data-placeholder="Posez votre question sur un produit du magasin...">
+          <span class="lang-flag">FR</span> Français
+          <span class="lang-check">&#10003;</span>
+        </button>
+        <button class="lang-option" data-lang="es"
+          data-welcome="Bienvenido a AUDIO HOUSE. Puedo ayudarte a encontrar el altavoz, los auriculares o la barra de sonido que mejor se adapten a ti, entre todas nuestras marcas. ¿Qué buscas hoy?"
+          data-placeholder="Pregunta por cualquier producto de la tienda...">
+          <span class="lang-flag">ES</span> Español
+          <span class="lang-check">&#10003;</span>
+        </button>
+        <button class="lang-option" data-lang="de"
+          data-welcome="Willkommen bei AUDIO HOUSE. Ich helfe Ihnen, den passenden Lautsprecher, Kopfhörer oder die richtige Soundbar aus all unseren Marken zu finden. Wonach suchen Sie?"
+          data-placeholder="Fragen Sie zu einem Produkt im Store...">
+          <span class="lang-flag">DE</span> Deutsch
+          <span class="lang-check">&#10003;</span>
+        </button>
+        <button class="lang-option" data-lang="it"
+          data-welcome="Benvenuto da AUDIO HOUSE. Posso aiutarti a trovare il diffusore, le cuffie o la soundbar più adatta a te, tra tutti i marchi che trattiamo. Cosa stai cercando?"
+          data-placeholder="Chiedi di un prodotto in negozio...">
+          <span class="lang-flag">IT</span> Italiano
+          <span class="lang-check">&#10003;</span>
+        </button>
+      </div>
+    </div>
+    <button class="icon-btn" id="restart-btn" title="New conversation">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+        <path d="M3 3v5h5"/>
+      </svg>
+    </button>
+  </div>
+</div>
+<div class="chat-window" id="chat"></div>
+<div class="footer-container">
+  <div class="quick-replies" id="quick-replies"></div>
+  <div class="input-wrapper">
+    <input type="text" id="input" placeholder="Ask about any product in the store..." autocomplete="off" autocapitalize="sentences" autocorrect="on">
+    <div class="send-btn-wrapper" id="send-wrapper">
+      <div class="wave-ring"></div>
+      <div class="wave-ring"></div>
+      <div class="wave-ring"></div>
+      <button class="send-btn" id="send-btn" title="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="11" y="4" width="2" height="16" rx="1" fill="white"/>
+          <rect x="7" y="7" width="2" height="10" rx="1" fill="white"/>
+          <rect x="3" y="9" width="2" height="6" rx="1" fill="white"/>
+          <rect x="15" y="7" width="2" height="10" rx="1" fill="white"/>
+          <rect x="19" y="9" width="2" height="6" rx="1" fill="white"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="powered-by">Powered by <a href="https://squ-ai.vercel.app/" target="_blank" rel="noopener">SQU</a></div>
+</div>
+<script>
+/* ===== CONFIG ===== */
+const CONFIG = {
+  storeName: "AUDIO HOUSE",
+  webhook: "https://n8n.srv1208833.hstgr.cloud/webhook/distributor_chat",
+  currency: "EUR",
+  defaultProductId: "DEV-PHANTOM2-95",
+  welcome: "Welcome to AUDIO HOUSE. I can help you find the right speaker, headphones, or soundbar across any of the brands we carry. What are you looking for today?"
+};
+
+const questionsPerLang = {
+  en: ["Compare brands", "Best for travel", "What's most premium", "Show me speakers", "Best for the home"],
+  fr: ["Comparer les marques", "Pour voyager", "Plus haut de gamme", "Voir les enceintes", "Pour la maison"],
+  es: ["Comparar marcas", "Para viajar", "Más premium", "Ver altavoces", "Para casa"],
+  de: ["Marken vergleichen", "Für Reisen", "Premium-Modelle", "Lautsprecher zeigen", "Für zu Hause"],
+  it: ["Confronta marchi", "Per viaggiare", "Più premium", "Mostra diffusori", "Per casa"]
+};
+
+/* ===== STATE ===== */
+const params = new URLSearchParams(window.location.search);
+const productId = params.get('product') || CONFIG.defaultProductId;
+let chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
+let currentLang = 'en';
+let isSending = false;
+
+/* ===== DOM ===== */
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+const sendWrapper = document.getElementById('send-wrapper');
+
+function triggerWave() {
+  sendWrapper.classList.remove('rippling');
+  void sendWrapper.offsetWidth;
+  sendWrapper.classList.add('rippling');
+  setTimeout(() => sendWrapper.classList.remove('rippling'), 800);
+}
+
+function parseMarkdown(text) {
+  let html = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  html = html.replace(/(?<!href=")(https?:\/\/[^\s<"]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  const lines = html.split('\n');
+  return lines.map(line => {
+    const t = line.trim();
+    if (!t) return '';
+    if (/^<(ul|ol|li|h[1-6])/.test(t)) return t;
+    return `<p>${t}</p>`;
+  }).filter(Boolean).join('\n');
+}
+
+function addMsg(text, type) {
+  const wrapper = document.createElement('div');
+  wrapper.className = `message-wrapper ${type}`;
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (type === 'bot') {
+    const label = document.createElement('div');
+    label.className = 'bot-label';
+    label.textContent = `${CONFIG.storeName} Advisor`;
+    wrapper.appendChild(label);
+  }
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `message ${type}`;
+  if (type === 'bot') {
+    msgDiv.innerHTML = parseMarkdown(text);
+  } else {
+    msgDiv.textContent = text;
+  }
+  wrapper.appendChild(msgDiv);
+  const timeDiv = document.createElement('div');
+  timeDiv.className = 'message-time';
+  timeDiv.textContent = time;
+  wrapper.appendChild(timeDiv);
+  chat.appendChild(wrapper);
+  scrollChatToBottom();
+}
+
+function scrollChatToBottom() {
+  requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.id = 'typing';
+  div.className = 'message-wrapper bot';
+  const label = document.createElement('div');
+  label.className = 'bot-label';
+  label.textContent = `${CONFIG.storeName} Advisor`;
+  div.appendChild(label);
+  const msg = document.createElement('div');
+  msg.className = 'message bot';
+  msg.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  div.appendChild(msg);
+  chat.appendChild(div);
+  scrollChatToBottom();
+}
+
+async function handleSend(textOverride) {
+  const text = textOverride || input.value.trim();
+  if (!text || isSending) return;
+  input.value = '';
+  document.getElementById('quick-replies').style.display = 'none';
+  isSending = true;
+  input.disabled = true;
+  document.getElementById('send-btn').disabled = true;
+  triggerWave();
+  addMsg(text, 'user');
+  showTyping();
+  try {
+    const res = await fetch(CONFIG.webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        productId,
+        chatId,
+        language: currentLang,
+        currency: CONFIG.currency
+      })
+    });
+    const data = await res.json();
+    if (document.getElementById('typing')) document.getElementById('typing').remove();
+    addMsg(data.reply || "I'm having trouble connecting. Please try again.", 'bot');
+  } catch(e) {
+    if (document.getElementById('typing')) document.getElementById('typing').remove();
+    addMsg("Connection issue. Please check your network and try again.", 'bot');
+  } finally {
+    isSending = false;
+    input.disabled = false;
+    document.getElementById('send-btn').disabled = false;
+    if (!('ontouchstart' in window) && window.innerWidth > 640) {
+      input.focus();
+    }
+  }
+}
+
+function init() {
+  chat.innerHTML = '';
+  addMsg(CONFIG.welcome, 'bot');
+  const qr = document.getElementById('quick-replies');
+  qr.innerHTML = '';
+  qr.style.display = 'flex';
+  const questions = questionsPerLang[currentLang] || questionsPerLang.en;
+  questions.forEach(q => {
+    const b = document.createElement('button');
+    b.className = 'qr-btn';
+    b.textContent = q;
+    b.onclick = () => handleSend(q);
+    qr.appendChild(b);
+  });
+}
+
+document.getElementById('send-btn').onclick = (e) => { e.preventDefault(); handleSend(); };
+input.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); handleSend(); } });
+document.getElementById('restart-btn').onclick = () => {
+  chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
+  init();
+};
+
+const langBtn = document.getElementById('lang-btn');
+const langDropdown = document.getElementById('lang-dropdown');
+langBtn.onclick = (e) => { e.stopPropagation(); langDropdown.classList.toggle('open'); };
+document.addEventListener('click', () => { langDropdown.classList.remove('open'); });
+langDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
+document.querySelectorAll('.lang-option').forEach(opt => {
+  opt.onclick = () => {
+    currentLang = opt.dataset.lang;
+    document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    CONFIG.welcome = opt.dataset.welcome;
+    input.placeholder = opt.dataset.placeholder;
+    langDropdown.classList.remove('open');
+    chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
+    init();
+  };
+});
+
+window.addEventListener('resize', scrollChatToBottom);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', scrollChatToBottom);
+chat.addEventListener('scroll', () => { if (chat.scrollLeft !== 0) chat.scrollLeft = 0; });
+
+init();
+</script>
+</body>
+</html>
