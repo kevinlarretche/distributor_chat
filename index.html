@@ -277,32 +277,32 @@
       </button>
       <div class="lang-dropdown" id="lang-dropdown">
         <button class="lang-option active" data-lang="en"
-          data-welcome="Welcome to AUDIO HOUSE. I can help you find the right speaker, headphones, or soundbar across any of the brands we carry. What are you looking for today?"
-          data-placeholder="Ask about any product in the store...">
+          data-welcome="Welcome to AUDIO HOUSE. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
+          data-placeholder="Ask anything about the store or our brands...">
           <span class="lang-flag">EN</span> English
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="fr"
-          data-welcome="Bienvenue chez AUDIO HOUSE. Je peux vous aider à trouver l'enceinte, les écouteurs ou la barre de son qui vous conviendra, parmi toutes nos marques. Que recherchez-vous ?"
-          data-placeholder="Posez votre question sur un produit du magasin...">
+          data-welcome="Bienvenue chez AUDIO HOUSE. Vous cherchez quelque chose en particulier, ou vous regardez ? Je peux vous aider à comparer entre toutes nos marques."
+          data-placeholder="Posez votre question sur la boutique ou nos marques...">
           <span class="lang-flag">FR</span> Français
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="es"
-          data-welcome="Bienvenido a AUDIO HOUSE. Puedo ayudarte a encontrar el altavoz, los auriculares o la barra de sonido que mejor se adapten a ti, entre todas nuestras marcas. ¿Qué buscas hoy?"
-          data-placeholder="Pregunta por cualquier producto de la tienda...">
+          data-welcome="Bienvenido a AUDIO HOUSE. ¿Buscas algo en concreto, o estás mirando? Puedo ayudarte a comparar entre todas nuestras marcas."
+          data-placeholder="Pregunta lo que quieras sobre la tienda o nuestras marcas...">
           <span class="lang-flag">ES</span> Español
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="de"
-          data-welcome="Willkommen bei AUDIO HOUSE. Ich helfe Ihnen, den passenden Lautsprecher, Kopfhörer oder die richtige Soundbar aus all unseren Marken zu finden. Wonach suchen Sie?"
-          data-placeholder="Fragen Sie zu einem Produkt im Store...">
+          data-welcome="Willkommen bei AUDIO HOUSE. Suchen Sie etwas Bestimmtes, oder schauen Sie sich nur um? Ich helfe Ihnen, zwischen all unseren Marken zu vergleichen."
+          data-placeholder="Fragen Sie etwas zum Store oder unseren Marken...">
           <span class="lang-flag">DE</span> Deutsch
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="it"
-          data-welcome="Benvenuto da AUDIO HOUSE. Posso aiutarti a trovare il diffusore, le cuffie o la soundbar più adatta a te, tra tutti i marchi che trattiamo. Cosa stai cercando?"
-          data-placeholder="Chiedi di un prodotto in negozio...">
+          data-welcome="Benvenuto da AUDIO HOUSE. Cerchi qualcosa in particolare, o stai dando un'occhiata? Posso aiutarti a confrontare tra tutti i marchi che trattiamo."
+          data-placeholder="Chiedi qualunque cosa sul negozio o sui nostri marchi...">
           <span class="lang-flag">IT</span> Italiano
           <span class="lang-check">&#10003;</span>
         </button>
@@ -344,8 +344,7 @@ const CONFIG = {
   storeName: "AUDIO HOUSE",
   webhook: "https://n8n.srv1208833.hstgr.cloud/webhook/distributor_chat",
   currency: "EUR",
-  defaultProductId: "DEV-PHANTOM2-95",
-  welcome: "Welcome to AUDIO HOUSE. I can help you find the right speaker, headphones, or soundbar across any of the brands we carry. What are you looking for today?"
+  welcome: "Welcome to AUDIO HOUSE. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
 };
 
 const questionsPerLang = {
@@ -357,8 +356,6 @@ const questionsPerLang = {
 };
 
 /* ===== STATE ===== */
-const params = new URLSearchParams(window.location.search);
-const productId = params.get('product') || CONFIG.defaultProductId;
 let chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
 let currentLang = 'en';
 let isSending = false;
@@ -459,7 +456,6 @@ async function handleSend(textOverride) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: text,
-        productId,
         chatId,
         language: currentLang,
         currency: CONFIG.currency
