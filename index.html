@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>AUDIO HOUR — Store Advisor</title>
+<title>Boutique Acoustique · Store Advisor</title>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap">
 <style>
   :root {
@@ -42,8 +42,6 @@
     top: 0; left: 0; right: 0; bottom: 0;
   }
   ::selection { background: var(--ink); color: var(--paper); }
-
-  /* Subtle paper grain */
   .grain {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image:
@@ -52,9 +50,7 @@
     background-size: 3px 3px, 7px 7px;
     background-position: 0 0, 1px 2px;
   }
-
   .header, .chat-window, .footer-container { position: relative; z-index: 1; }
-
   .header {
     background: var(--paper);
     border-bottom: 1px solid var(--rule);
@@ -103,7 +99,6 @@
     transition: all 0.15s ease;
   }
   .icon-btn:hover { color: var(--ink); background: rgba(22,20,15,0.04); }
-
   .chat-window {
     flex: 1;
     overflow-y: auto;
@@ -121,7 +116,6 @@
   .chat-window::-webkit-scrollbar { width: 4px; }
   .chat-window::-webkit-scrollbar-track { background: transparent; }
   .chat-window::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 2px; }
-
   .message-wrapper {
     display: flex;
     flex-direction: column;
@@ -135,7 +129,6 @@
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .bot-label {
     font-size: 11px; font-weight: 500;
     letter-spacing: -0.005em;
@@ -148,7 +141,6 @@
     width: 18px; height: 1px;
     background: var(--rule-2);
   }
-
   .message {
     padding: 14px 18px;
     font-size: 14.5px;
@@ -210,7 +202,6 @@
     margin-top: 6px;
     letter-spacing: -0.005em;
   }
-
   #typing .message.bot { display: flex; gap: 5px; padding: 16px 18px; align-items: center; }
   .dot { width: 5px; height: 5px; background: var(--ink-3); border-radius: 50%; animation: pulseDot 1.4s infinite ease-in-out; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
@@ -219,7 +210,6 @@
     0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
     40% { opacity: 1; transform: scale(1); }
   }
-
   .footer-container {
     background: var(--paper);
     border-top: 1px solid var(--rule);
@@ -255,7 +245,6 @@
     color: var(--ink);
     background: rgba(22,20,15,0.03);
   }
-
   .input-wrapper {
     display: flex; align-items: center; gap: 10px;
     background: var(--paper-3);
@@ -283,7 +272,6 @@
     width: 100%;
   }
   .input-wrapper input::placeholder { color: var(--ink-3); }
-
   .send-btn-wrapper { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
   .send-btn {
     background: var(--ink);
@@ -308,7 +296,6 @@
     0% { transform: translate(-50%, -50%) scale(1); border-color: rgba(22,20,15,0.4); }
     100% { transform: translate(-50%, -50%) scale(2.6); border-color: rgba(22,20,15,0); }
   }
-
   .powered-by {
     text-align: center;
     font-size: 11px;
@@ -330,7 +317,6 @@
   }
   .powered-by a:hover { color: var(--ink); }
   .powered-by a:hover::after { width: 100%; }
-
   .lang-wrapper { position: relative; z-index: 100; }
   .lang-dropdown {
     position: absolute; top: calc(100% + 8px); right: 0;
@@ -360,8 +346,6 @@
   .lang-option.active .lang-flag { color: var(--ink); }
   .lang-option .lang-check { margin-left: auto; opacity: 0; font-size: 11px; color: var(--teal); }
   .lang-option.active .lang-check { opacity: 1; }
-
-  /* Mobile */
   @media (max-width: 640px) {
     .header {
       padding: 0 18px;
@@ -389,7 +373,7 @@
 <div class="header">
   <div class="header-left">
     <div class="brand-mark">
-      <div class="brand-name">AUDIO HOUR.</div>
+      <div class="brand-name">Boutique Acoustique</div>
       <div class="brand-sub">
         <span class="status-dot"></span>
         Store Advisor
@@ -407,31 +391,31 @@
       </button>
       <div class="lang-dropdown" id="lang-dropdown">
         <button class="lang-option active" data-lang="en"
-          data-welcome="Welcome to AUDIO HOUR. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
+          data-welcome="Welcome to Boutique Acoustique. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
           data-placeholder="Ask anything about the store or our brands...">
           <span class="lang-flag">EN</span> English
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="fr"
-          data-welcome="Bienvenue chez AUDIO HOUR. Vous cherchez quelque chose en particulier, ou vous regardez ? Je peux vous aider à comparer entre toutes nos marques."
+          data-welcome="Bienvenue chez Boutique Acoustique. Vous cherchez quelque chose en particulier, ou vous regardez ? Je peux vous aider à comparer entre toutes nos marques."
           data-placeholder="Posez votre question sur la boutique ou nos marques...">
           <span class="lang-flag">FR</span> Français
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="es"
-          data-welcome="Bienvenido a AUDIO HOUSE. ¿Buscas algo en concreto, o estás mirando? Puedo ayudarte a comparar entre todas nuestras marcas."
+          data-welcome="Bienvenido a Boutique Acoustique. ¿Buscas algo en concreto, o estás mirando? Puedo ayudarte a comparar entre todas nuestras marcas."
           data-placeholder="Pregunta lo que quieras sobre la tienda o nuestras marcas...">
           <span class="lang-flag">ES</span> Español
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="de"
-          data-welcome="Willkommen bei AUDIO HOUSE. Suchen Sie etwas Bestimmtes, oder schauen Sie sich nur um? Ich helfe Ihnen, zwischen all unseren Marken zu vergleichen."
+          data-welcome="Willkommen bei Boutique Acoustique. Suchen Sie etwas Bestimmtes, oder schauen Sie sich nur um? Ich helfe Ihnen, zwischen all unseren Marken zu vergleichen."
           data-placeholder="Fragen Sie etwas zum Store oder unseren Marken...">
           <span class="lang-flag">DE</span> Deutsch
           <span class="lang-check">&#10003;</span>
         </button>
         <button class="lang-option" data-lang="it"
-          data-welcome="Benvenuto da AUDIO HOUSE. Cerchi qualcosa in particolare, o stai dando un'occhiata? Posso aiutarti a confrontare tra tutti i marchi che trattiamo."
+          data-welcome="Benvenuto da Boutique Acoustique. Cerchi qualcosa in particolare, o stai dando un'occhiata? Posso aiutarti a confrontare tra tutti i marchi che trattiamo."
           data-placeholder="Chiedi qualunque cosa sul negozio o sui nostri marchi...">
           <span class="lang-flag">IT</span> Italiano
           <span class="lang-check">&#10003;</span>
@@ -470,12 +454,11 @@
 </div>
 <script>
 const CONFIG = {
-  storeName: "AUDIO HOUSE",
+  storeName: "Boutique Acoustique",
   webhook: "https://n8n.srv1208833.hstgr.cloud/webhook/distributor_chat",
   currency: "EUR",
-  welcome: "Welcome to AUDIO HOUSE. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
+  welcome: "Welcome to Boutique Acoustique. Looking for something specific, or just browsing? I can help you compare across any of the brands we carry."
 };
-
 const questionsPerLang = {
   en: ["Best speaker under €1000", "Compare Bose and Sonos", "For running outdoors", "For a small apartment", "Looking for a gift idea"],
   fr: ["Meilleure enceinte sous 1000 €", "Comparer Bose et Sonos", "Pour courir en extérieur", "Pour un petit appartement", "Idée cadeau"],
@@ -483,22 +466,18 @@ const questionsPerLang = {
   de: ["Bester Lautsprecher unter 1000 €", "Bose vs. Sonos", "Zum Joggen draußen", "Für eine kleine Wohnung", "Geschenkidee"],
   it: ["Miglior diffusore sotto i 1000 €", "Confronta Bose e Sonos", "Per correre all'aperto", "Per un piccolo appartamento", "Idea regalo"]
 };
-
 let chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
 let currentLang = 'en';
 let isSending = false;
-
 const chat = document.getElementById('chat');
 const input = document.getElementById('input');
 const sendWrapper = document.getElementById('send-wrapper');
-
 function triggerWave() {
   sendWrapper.classList.remove('rippling');
   void sendWrapper.offsetWidth;
   sendWrapper.classList.add('rippling');
   setTimeout(() => sendWrapper.classList.remove('rippling'), 800);
 }
-
 function parseMarkdown(text) {
   let html = text
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -519,7 +498,6 @@ function parseMarkdown(text) {
     return `<p>${t}</p>`;
   }).filter(Boolean).join('\n');
 }
-
 function addMsg(text, type) {
   const wrapper = document.createElement('div');
   wrapper.className = `message-wrapper ${type}`;
@@ -545,11 +523,9 @@ function addMsg(text, type) {
   chat.appendChild(wrapper);
   scrollChatToBottom();
 }
-
 function scrollChatToBottom() {
   requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
 }
-
 function showTyping() {
   const div = document.createElement('div');
   div.id = 'typing';
@@ -565,7 +541,6 @@ function showTyping() {
   chat.appendChild(div);
   scrollChatToBottom();
 }
-
 async function handleSend(textOverride) {
   const text = textOverride || input.value.trim();
   if (!text || isSending) return;
@@ -603,7 +578,6 @@ async function handleSend(textOverride) {
     }
   }
 }
-
 function init() {
   chat.innerHTML = '';
   addMsg(CONFIG.welcome, 'bot');
@@ -619,21 +593,17 @@ function init() {
     qr.appendChild(b);
   });
 }
-
 document.getElementById('send-btn').onclick = (e) => { e.preventDefault(); handleSend(); };
 input.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); handleSend(); } });
-
 document.getElementById('restart-btn').onclick = () => {
   chatId = 'dist_' + Math.random().toString(36).substr(2, 9);
   init();
 };
-
 const langBtn = document.getElementById('lang-btn');
 const langDropdown = document.getElementById('lang-dropdown');
 langBtn.onclick = (e) => { e.stopPropagation(); langDropdown.classList.toggle('open'); };
 document.addEventListener('click', () => { langDropdown.classList.remove('open'); });
 langDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
-
 document.querySelectorAll('.lang-option').forEach(opt => {
   opt.onclick = () => {
     currentLang = opt.dataset.lang;
@@ -646,11 +616,9 @@ document.querySelectorAll('.lang-option').forEach(opt => {
     init();
   };
 });
-
 window.addEventListener('resize', scrollChatToBottom);
 if (window.visualViewport) window.visualViewport.addEventListener('resize', scrollChatToBottom);
 chat.addEventListener('scroll', () => { if (chat.scrollLeft !== 0) chat.scrollLeft = 0; });
-
 init();
 </script>
 </body>
